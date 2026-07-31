@@ -17,3 +17,11 @@ button {
   border-radius: 8px;
   border: none;
 }
+
+h1 {
+  text-align: center;
+}
+
+.welcome-message {
+  text-align: center;
+}
