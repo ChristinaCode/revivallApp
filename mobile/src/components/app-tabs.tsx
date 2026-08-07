@@ -24,9 +24,9 @@ export default function AppTabs() {
       />
 
       <Tabs.Screen
-        name="explore"
+        name="fundraising"
         options={{
-          title: 'Explore',
+          title: 'Fundraising',
         }}
       />
     </Tabs>
