@@ -9,8 +9,8 @@ function Dashboard() {
 
       <section>
         <h3>Fundraising</h3>
-        <p>$8,450 / $13,000</p>
-        <progress value={8450} max={13000}></progress>
+        <p>$11,000 / $16,900</p>
+        <progress value={11000} max={16900}></progress>
       </section>
 
       <section>
@@ -19,13 +19,13 @@ function Dashboard() {
           <li>✅ Passport</li>
           <li>✅ Support Letters</li>
           <li>⬜ Visa</li>
-          <li>⬜ Purchase Flight</li>
+          <li>✅ Purchase Flight</li>
         </ul>
       </section>
 
       <section>
         <h3>Announcements</h3>
-        <p>📢 Team Zoom meeting on Thursday at 7:00 PM.</p>
+        <p>📢 Team Zoom meeting on Saturday at 9:00 AM.</p>
       </section>
     </div>
   );
