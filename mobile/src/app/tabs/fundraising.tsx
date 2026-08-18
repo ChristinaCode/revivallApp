@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { ScrollView, StyleSheet, View, Pressable } from 'react-native';
+import { ScrollView, StyleSheet, View, Pressable, TextInput } from 'react-native';
 
 import { supabase } from '@/lib/supabase';
 
@@ -7,22 +7,34 @@ import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
 
 type Donation = {
-  id: string;
+  don_id: string;
   user_id: string;
   amount: number;
   donor: string;
   date: string;
   reason: string;
-  thank_you_sent: boolean;
-  for_pot: boolean;
+  thankYou: boolean;
+  forThePot: boolean;
   ems: boolean;
-  future_prediction: boolean;
+  currentlyHave: boolean;
   note: string | null;
 };
 
 export default function FundraisingScreen() {
   const [donations, setDonations] = useState<Donation[]>([]);
   const [loading, setLoading] = useState(true);
+
+  const [showAddDonation, setShowAddDonation] = useState(false);
+
+  const [amount, setAmount] = useState('');
+  const [donor, setDonor] = useState('');
+  const [date, setDate] = useState('');
+  const [reason, setReason] = useState('');
+  const [thankYouSent, setThankYouSent] = useState(false);
+  const [forPot, setForPot] = useState(false);
+  const [ems, setEms] = useState(false);
+  const [futurePrediction, setFuturePrediction] = useState(false);
+  const [note, setNote] = useState('');
 
   async function loadDonations() {
     setLoading(true);
@@ -45,6 +57,10 @@ export default function FundraisingScreen() {
       .order('date', { ascending: false });
 
     console.log('Donations:', data);
+    console.log(
+      'Donation IDs:',
+      data?.map((donation) => donation.don_id)
+    );
     console.log('Donation error:', error);
 
     if (error) {
@@ -55,6 +71,56 @@ export default function FundraisingScreen() {
 
     setDonations(data ?? []);
     setLoading(false);
+  }
+
+  async function saveDonation() {
+    // Get the currently logged-in user
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
+    if (!user) {
+      console.error('No user is logged in');
+      return;
+    }
+
+    // Send the donation to Supabase
+    const { error } = await supabase
+      .from('donations')
+      .insert({
+        user_id: user.id,
+        amount: Number(amount),
+        donor: donor,
+        date: date,
+        reason: reason,
+        thankYou: thankYouSent,
+        forThePot: forPot,
+        ems: ems,
+        currentlyHave: futurePrediction,
+        note: note,
+      });
+
+    if (error) {
+      console.error('Error saving donation:', error);
+      return;
+    }
+
+    // Reload donations so the new one appears
+    await loadDonations();
+
+    // Close the form
+    setShowAddDonation(false);
+
+    // Clear the form
+    setAmount('');
+    setDonor('');
+    setDate('');
+    setReason('');
+    setThankYouSent(false);
+    setForPot(false);
+    setEms(false);
+    setFuturePrediction(false);
+    setNote('');
   }
 
   useEffect(() => {
@@ -80,7 +146,7 @@ export default function FundraisingScreen() {
       <>
         {donations.map((donation) => (
           <View
-            key={`donation-${donation.id}`}
+            key={`donation-${donation.don_id}`}
             style={styles.tableRow}
           >
             <ThemedText style={styles.dateColumn}>
@@ -104,6 +170,15 @@ export default function FundraisingScreen() {
     );
   }
 
+  const totalRaised = donations.reduce(
+    (sum, d) => sum + Number(d?.amount ?? 0),
+    0
+  );
+
+  const totalLeft = 16900 - totalRaised;
+
+  const percentageRaised = (totalRaised / 16900) * 100;
+
   return (
     <ThemedView style={styles.container}>
       <ScrollView
@@ -119,20 +194,21 @@ export default function FundraisingScreen() {
         <View style={styles.progressSection}>
           <View style={styles.progressHeader}>
             <ThemedText type="subtitle">
-              $4,250 raised
+              {`$${totalRaised.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})} raised`}
             </ThemedText>
 
             <ThemedText>
-              Goal: $13,000
+              Goal: $16,900
             </ThemedText>
           </View>
 
           <View style={styles.progressBackground}>
-            <View style={styles.progressFill} />
+            <View style={[styles.progressFill, 
+              { width: `${percentageRaised}%` }]} />
           </View>
 
           <ThemedText style={styles.progressText}>
-            33% of your goal
+            {`${Math.round(percentageRaised)}% of your goal`}
           </ThemedText>
         </View>
 
@@ -144,7 +220,7 @@ export default function FundraisingScreen() {
             </ThemedText>
 
             <ThemedText type="subtitle">
-              $4,250
+              {`$${totalRaised.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`}
             </ThemedText>
           </View>
 
@@ -166,7 +242,7 @@ export default function FundraisingScreen() {
             </ThemedText>
 
             <ThemedText type="subtitle">
-              $8,750
+              {`$${totalLeft.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`}
             </ThemedText>
           </View>
         </View>
@@ -177,12 +253,66 @@ export default function FundraisingScreen() {
             Donations
           </ThemedText>
 
-          <Pressable style={styles.addButton}>
+          <Pressable 
+          style={styles.addButton}
+          onPress={() => setShowAddDonation(true)}
+          >
             <ThemedText style={styles.addButtonText}>
               + Add Donation
             </ThemedText>
           </Pressable>
         </View>
+
+        {showAddDonation && (
+          <View style={styles.addDonationForm}>
+            <TextInput
+              placeholder="Amount"
+              value={amount}
+              onChangeText={setAmount}
+              style={styles.input}
+              keyboardType="decimal-pad"
+            />
+            <TextInput
+              placeholder="Donor"
+              value={donor}
+              onChangeText={setDonor}
+              style={styles.input}
+            />
+            <TextInput
+              placeholder="Date"
+              value={date}
+              onChangeText={setDate}
+              style={styles.input}
+            />
+            <TextInput
+              placeholder="Reason"
+              value={reason}
+              onChangeText={setReason}
+              style={styles.input}
+            />
+            <TextInput
+              placeholder="Note"
+              value={note}
+              onChangeText={setNote}
+              style={styles.input}
+              multiline
+            />
+            <Pressable
+            style={styles.saveButton}
+            onPress={saveDonation}>
+              <ThemedText style={styles.saveButtonText}>
+                Save Donation
+              </ThemedText>
+            </Pressable>
+            <Pressable 
+            style={styles.cancelButton}
+            onPress={() => setShowAddDonation(false)}>
+              <ThemedText>
+                Cancel Donation
+              </ThemedText>
+            </Pressable>
+          </View>
+        )}
 
         {/* Search / Filter */}
         <View style={styles.filterRow}>
@@ -269,7 +399,6 @@ const styles = StyleSheet.create({
 
   progressFill: {
     height: '100%',
-    width: '33%',
     backgroundColor: '#4F46E5',
     borderRadius: 7,
   },
@@ -396,4 +525,48 @@ const styles = StyleSheet.create({
     width: 100,
     textAlign: 'right',
   },
+
+  addDonationForm: {
+  borderWidth: 1,
+  borderColor: '#DDD',
+  borderRadius: 10,
+  padding: 16,
+  marginBottom: 20,
+},
+
+input: {
+  borderWidth: 1,
+  borderColor: '#CCC',
+  borderRadius: 8,
+  paddingHorizontal: 12,
+  paddingVertical: 10,
+  marginTop: 12,
+},
+
+formButtons: {
+  flexDirection: 'row',
+  justifyContent: 'flex-end',
+  gap: 10,
+  marginTop: 16,
+},
+
+cancelButton: {
+  borderWidth: 1,
+  borderColor: '#CCC',
+  borderRadius: 8,
+  paddingHorizontal: 16,
+  paddingVertical: 10,
+},
+
+saveButton: {
+  backgroundColor: '#4F46E5',
+  borderRadius: 8,
+  paddingHorizontal: 16,
+  paddingVertical: 10,
+},
+
+saveButtonText: {
+  color: '#FFFFFF',
+  fontWeight: '600',
+},
 });
