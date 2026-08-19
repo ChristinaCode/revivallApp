@@ -175,8 +175,6 @@ export default function FundraisingScreen() {
     0
   );
 
-  const totalLeft = 16900 - totalRaised;
-
   const percentageRaised = (totalRaised / 16900) * 100;
 
   return (
@@ -316,6 +314,26 @@ export default function FundraisingScreen() {
 
               <ThemedText style={styles.amountColumn}>
                 Amount
+              </ThemedText>
+
+              <ThemedText style={styles.emsColumn}>
+                EMS?
+              </ThemedText>
+
+              <ThemedText style={styles.potColumn}>
+                Pot/Personal
+              </ThemedText>
+
+              <ThemedText style={styles.futureColumn}>
+                Future Prediction?
+              </ThemedText>
+
+              <ThemedText style={styles.thankyouColumn}>
+                Thank You Sent?
+              </ThemedText>
+
+              <ThemedText style={styles.noteColumn}>
+                Note
               </ThemedText>
             </View>
 
@@ -475,20 +493,42 @@ const styles = StyleSheet.create({
   },
 
   dateColumn: {
-    width: 90,
-  },
-
-  donorColumn: {
     width: 140,
   },
 
+  donorColumn: {
+    width: 200,
+  },
+
   reasonColumn: {
-    width: 180,
+    width: 150,
   },
 
   amountColumn: {
+    width: 140,
+    //textAlign: 'right',
+  },
+
+  emsColumn: {
     width: 100,
-    textAlign: 'right',
+    //textAlign: 'center',
+  },
+
+  potColumn: {
+    width: 140,
+  },
+
+  futureColumn: {
+    width: 180,
+  },
+
+  thankyouColumn: {
+    width: 160,
+  },
+
+  noteColumn: {
+    width: 200,
+    textAlign: 'center',
   },
 
   addDonationForm: {
