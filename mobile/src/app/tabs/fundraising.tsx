@@ -212,41 +212,6 @@ export default function FundraisingScreen() {
           </ThemedText>
         </View>
 
-        {/* Summary */}
-        <View style={styles.summaryContainer}>
-          <View style={styles.summaryBox}>
-            <ThemedText style={styles.summaryLabel}>
-              Raised
-            </ThemedText>
-
-            <ThemedText type="subtitle">
-              {`$${totalRaised.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`}
-            </ThemedText>
-          </View>
-
-          <View style={styles.chartBox}>
-            <ThemedText style={styles.summaryLabel}>
-              Donation Reasons
-            </ThemedText>
-
-            <View style={styles.chartPlaceholder}>
-              <ThemedText>
-                Pie Chart
-              </ThemedText>
-            </View>
-          </View>
-
-          <View style={styles.summaryBox}>
-            <ThemedText style={styles.summaryLabel}>
-              Remaining
-            </ThemedText>
-
-            <ThemedText type="subtitle">
-              {`$${totalLeft.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`}
-            </ThemedText>
-          </View>
-        </View>
-
         {/* Donations */}
         <View style={styles.donationsHeader}>
           <ThemedText type="subtitle">
