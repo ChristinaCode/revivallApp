@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { ScrollView, StyleSheet, View, Pressable, TextInput } from 'react-native';
+import { ScrollView, StyleSheet, View, Pressable, TextInput, Switch } from 'react-native';
 
 import { supabase } from '@/lib/supabase';
 
@@ -16,7 +16,7 @@ type Donation = {
   thankYou: boolean;
   forThePot: boolean;
   ems: boolean;
-  currentlyHave: boolean;
+  future: boolean;
   note: string | null;
 };
 
@@ -96,7 +96,7 @@ export default function FundraisingScreen() {
         thankYou: thankYouSent,
         forThePot: forPot,
         ems: ems,
-        currentlyHave: futurePrediction,
+        future: futurePrediction,
         note: note,
       });
 
@@ -163,6 +163,26 @@ export default function FundraisingScreen() {
 
             <ThemedText style={styles.amountColumn}>
               ${Number(donation.amount).toFixed(2)}
+            </ThemedText>
+
+            <ThemedText style={styles.emsColumn}>
+              {donation.ems ? '✔' : '✘'}
+            </ThemedText>
+
+            <ThemedText style={styles.potColumn}>
+              {donation.forThePot ? 'Pot' : 'Personal'}
+            </ThemedText>
+
+            <ThemedText style={styles.futureColumn}>
+              {donation.future ? '✔' : '✘'}
+            </ThemedText>
+
+            <ThemedText style={styles.thankyouColumn}>
+              {donation.thankYou ? '✔' : '✘'}
+            </ThemedText>
+
+            <ThemedText style={styles.noteColumn}>
+              {donation.note ?? ''}
             </ThemedText>
           </View>
         ))}
@@ -253,6 +273,36 @@ export default function FundraisingScreen() {
               onChangeText={setReason}
               style={styles.input}
             />
+
+            <View style={styles.checkboxRow}>
+              <ThemedText>Thank You Sent?</ThemedText>
+              <Switch
+                value={thankYouSent}
+                onValueChange={setThankYouSent}
+              />
+            </View>
+            <View style={styles.checkboxRow}>
+              <ThemedText>For the Pot?</ThemedText>
+              <Switch
+                value={forPot}
+                onValueChange={setForPot}
+              />
+            </View>
+            <View style={styles.checkboxRow}>
+              <ThemedText>EMS?</ThemedText>
+              <Switch
+                value={ems}
+                onValueChange={setEms}
+              />
+            </View>
+            <View style={styles.checkboxRow}>
+              <ThemedText>Future Prediction?</ThemedText>
+              <Switch
+                value={futurePrediction}
+                onValueChange={setFuturePrediction}
+              />
+            </View>
+
             <TextInput
               placeholder="Note"
               value={note}
@@ -494,36 +544,42 @@ const styles = StyleSheet.create({
 
   dateColumn: {
     width: 140,
+    textAlign: 'center',
   },
 
   donorColumn: {
-    width: 200,
+    width: 180,
+    textAlign: 'center',
   },
 
   reasonColumn: {
     width: 150,
+    textAlign: 'center',
   },
 
   amountColumn: {
     width: 140,
-    //textAlign: 'right',
+    textAlign: 'center',
   },
 
   emsColumn: {
     width: 100,
-    //textAlign: 'center',
+    textAlign: 'center',
   },
 
   potColumn: {
     width: 140,
+    textAlign: 'center',
   },
 
   futureColumn: {
     width: 180,
+    textAlign: 'center',
   },
 
   thankyouColumn: {
     width: 160,
+    textAlign: 'center',
   },
 
   noteColumn: {
@@ -537,6 +593,13 @@ const styles = StyleSheet.create({
   borderRadius: 10,
   padding: 16,
   marginBottom: 20,
+},
+
+checkboxRow: {
+  flexDirection: 'row',
+  justifyContent: 'space-between',
+  alignItems: 'center',
+  marginTop: 12,
 },
 
 input: {
