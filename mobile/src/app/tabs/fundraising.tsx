@@ -35,6 +35,21 @@ export default function FundraisingScreen() {
   const [ems, setEms] = useState(false);
   const [futurePrediction, setFuturePrediction] = useState(false);
   const [note, setNote] = useState('');
+  const [editingDonation, setEditingDonation] = useState<Donation | null>(null);
+
+  useEffect(() => {
+    if (editingDonation) {
+      setAmount(editingDonation.amount.toString());
+      setDonor(editingDonation.donor);
+      setDate(editingDonation.date);
+      setReason(editingDonation.reason);
+      setThankYouSent(editingDonation.thankYou);
+      setForPot(editingDonation.forThePot);
+      setEms(editingDonation.ems);
+      setFuturePrediction(editingDonation.future);
+      setNote(editingDonation.note ?? '');
+    }
+  }, [editingDonation]);
 
   async function loadDonations() {
     setLoading(true);
@@ -82,6 +97,23 @@ export default function FundraisingScreen() {
     if (!user) {
       console.error('No user is logged in');
       return;
+    }
+
+    if (editingDonation) {
+      const { error } = await supabase
+        .from('donations')
+        .update({
+          amount: Number(amount),
+          donor,
+          date,
+          reason,
+          thankYou: thankYouSent,
+          forThePot: forPot,
+          ems,
+          future: futurePrediction,
+          note,
+        })
+        .eq('don_id', editingDonation.don_id);
     }
 
     // Send the donation to Supabase
@@ -145,9 +177,13 @@ export default function FundraisingScreen() {
     donationRows = (
       <>
         {donations.map((donation) => (
-          <View
+          <Pressable
             key={`donation-${donation.don_id}`}
             style={styles.tableRow}
+            onPress={() => {
+              setEditingDonation(donation);
+              setShowAddDonation(true);
+            }}
           >
             <ThemedText style={styles.dateColumn}>
               {donation.date}
@@ -184,7 +220,7 @@ export default function FundraisingScreen() {
             <ThemedText style={styles.noteColumn}>
               {donation.note ?? ''}
             </ThemedText>
-          </View>
+          </Pressable>
         ))}
       </>
     );
