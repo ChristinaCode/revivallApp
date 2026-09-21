@@ -99,7 +99,10 @@ export default function FundraisingScreen() {
       return;
     }
 
+    console.log('Editing donation:', editingDonation);
+
     if (editingDonation) {
+      // UPDATE an existing donation
       const { error } = await supabase
         .from('donations')
         .update({
@@ -114,34 +117,46 @@ export default function FundraisingScreen() {
           note,
         })
         .eq('don_id', editingDonation.don_id);
+
+      if (error) {
+        console.error('Error updating donation:', error);
+        return;
+      }
+
+      console.log('Donation updated successfully!');
+    } else {
+      // INSERT a brand-new donation
+      const { error } = await supabase
+        .from('donations')
+        .insert({
+          user_id: user.id,
+          amount: Number(amount),
+          donor,
+          date,
+          reason,
+          thankYou: thankYouSent,
+          forThePot: forPot,
+          ems,
+          future: futurePrediction,
+          note,
+        });
+
+      if (error) {
+        console.error('Error saving donation:', error);
+        return;
+      }
+
+      console.log('Donation added successfully!');
     }
 
-    // Send the donation to Supabase
-    const { error } = await supabase
-      .from('donations')
-      .insert({
-        user_id: user.id,
-        amount: Number(amount),
-        donor: donor,
-        date: date,
-        reason: reason,
-        thankYou: thankYouSent,
-        forThePot: forPot,
-        ems: ems,
-        future: futurePrediction,
-        note: note,
-      });
-
-    if (error) {
-      console.error('Error saving donation:', error);
-      return;
-    }
-
-    // Reload donations so the new one appears
+    // Reload donations so the changes appear
     await loadDonations();
 
     // Close the form
     setShowAddDonation(false);
+
+    // Clear the editing state
+    setEditingDonation(null);
 
     // Clear the form
     setAmount('');
@@ -274,7 +289,10 @@ export default function FundraisingScreen() {
 
           <Pressable 
           style={styles.addButton}
-          onPress={() => setShowAddDonation(true)}
+          onPress={() => {
+            setEditingDonation(null);
+            setShowAddDonation(true);
+          }}
           >
             <ThemedText style={styles.addButtonText}>
               + Add Donation
