@@ -1,5 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { ScrollView, StyleSheet, View, Pressable, TextInput, Switch } from 'react-native';
+import {
+  ScrollView,
+  StyleSheet,
+  View,
+  Pressable,
+  TextInput,
+  Switch,
+  Alert,
+} from 'react-native';
 
 import { supabase } from '@/lib/supabase';
 
@@ -170,6 +178,40 @@ export default function FundraisingScreen() {
     setNote('');
   }
 
+  function confirmDeleteDonation(donation: Donation) {
+    Alert.alert(
+      "Delete Donation?",
+      `Are you sure you want to delete this donation from ${donation.donor}?`,
+      [
+        {
+          text: "No",
+          style: "cancel",
+        },
+        {
+          text: "Yes",
+          style: "destructive",
+          onPress: () => deleteDonation(donation),
+        }
+      ]
+    )
+  }
+
+  async function deleteDonation(donation: Donation) {
+    const { error } = await supabase
+      .from('donations')
+      .delete()
+      .eq('don_id', donation.don_id);
+
+    if (error) {
+      console.error('Error deleting donation:', error);
+      return;
+    }
+
+    console.log('Donation deleted successfully!');
+
+    await loadDonations();
+  }
+
   useEffect(() => {
     loadDonations();
   }, []);
@@ -235,6 +277,15 @@ export default function FundraisingScreen() {
             <ThemedText style={styles.noteColumn}>
               {donation.note ?? ''}
             </ThemedText>
+
+            <Pressable
+              style={styles.deleteButton}
+              onPress={() => confirmDeleteDonation(donation)}
+            >
+              <ThemedText style={styles.deleteButtonText}>
+                Delete
+              </ThemedText>
+            </Pressable>
           </Pressable>
         ))}
       </>
@@ -688,6 +739,16 @@ saveButton: {
 },
 
 saveButtonText: {
+  color: '#FFFFFF',
+  fontWeight: '600',
+},
+
+deleteButton: {
+  backgroundColor: '#E53E3E',
+  borderRadius: 8,
+},
+
+deleteButtonText: {
   color: '#FFFFFF',
   fontWeight: '600',
 },
