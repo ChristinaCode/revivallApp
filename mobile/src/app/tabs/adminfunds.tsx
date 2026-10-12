@@ -77,7 +77,6 @@ export default function OverallFundraisingScreen() {
 
     // Calculate totals separately for each member.
     const summaries: MemberSummary[] = allProfiles
-      .filter((profile) => !profile.admin)
       .map((profile) => {
         const memberDonations = allDonations.filter(
           (donation) => donation.user_id === profile.id
