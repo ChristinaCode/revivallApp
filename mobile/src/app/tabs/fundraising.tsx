@@ -588,24 +588,6 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
 
-  filterRow: {
-    flexDirection: 'row',
-    gap: 10,
-    marginBottom: 16,
-  },
-
-  placeholderText: {
-    opacity: 0.5,
-  },
-
-  filterButton: {
-    borderWidth: 1,
-    borderColor: '#CCC',
-    borderRadius: 8,
-    paddingHorizontal: 16,
-    justifyContent: 'center',
-  },
-
   table: {
     minWidth: 600,
     borderWidth: 1,
@@ -621,6 +603,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: '#DDD',
     paddingHorizontal: 12,
+    backgroundColor: '#FFFFFF',
   },
 
   tableHeader: {
@@ -678,6 +661,7 @@ const styles = StyleSheet.create({
   borderRadius: 10,
   padding: 16,
   marginBottom: 20,
+  backgroundColor: '#FFFFFF',
 },
 
 checkboxRow: {
@@ -709,10 +693,11 @@ cancelButton: {
   borderRadius: 8,
   paddingHorizontal: 16,
   paddingVertical: 10,
+  backgroundColor: '#c5cedb',
 },
 
 saveButton: {
-  backgroundColor: '#4F46E5',
+  backgroundColor: '#E87532',
   borderRadius: 8,
   paddingHorizontal: 16,
   paddingVertical: 10,
@@ -724,12 +709,13 @@ saveButtonText: {
 },
 
 deleteButton: {
-  backgroundColor: '#E53E3E',
+  backgroundColor: '#bc2e2e',
   borderRadius: 8,
+  padding: 4,
 },
 
 deleteButtonText: {
   color: '#FFFFFF',
-  fontWeight: '600',
+  fontWeight: '400',
 },
 });
