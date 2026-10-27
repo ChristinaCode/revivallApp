@@ -432,21 +432,6 @@ export default function FundraisingScreen() {
           </View>
         )}
 
-        {/* Search / Filter */}
-        <View style={styles.filterRow}>
-          <View style={styles.searchBox}>
-            <ThemedText style={styles.placeholderText}>
-              🔍 Search donations...
-            </ThemedText>
-          </View>
-
-          <Pressable style={styles.filterButton}>
-            <ThemedText>
-              Filter
-            </ThemedText>
-          </Pressable>
-        </View>
-
         {/* Donation Table */}
         <ScrollView
           horizontal
@@ -505,6 +490,7 @@ export default function FundraisingScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: '#F7F8FA',
   },
 
   scrollContent: {
@@ -515,6 +501,7 @@ const styles = StyleSheet.create({
 
   title: {
     marginBottom: 24,
+    color: '#172B4D',
   },
 
   progressSection: {
@@ -526,6 +513,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     marginBottom: 10,
+    color: '#172B4D',
   },
 
   progressBackground: {
@@ -537,7 +525,7 @@ const styles = StyleSheet.create({
 
   progressFill: {
     height: '100%',
-    backgroundColor: '#4F46E5',
+    backgroundColor: '#E87532',
     borderRadius: 7,
   },
 
@@ -545,6 +533,7 @@ const styles = StyleSheet.create({
     marginTop: 6,
     textAlign: 'right',
     opacity: 0.7,
+    color: '#344054',
   },
 
   summaryContainer: {
@@ -588,7 +577,7 @@ const styles = StyleSheet.create({
   },
 
   addButton: {
-    backgroundColor: '#4F46E5',
+    backgroundColor: '#E87532',
     paddingHorizontal: 14,
     paddingVertical: 10,
     borderRadius: 8,
@@ -603,15 +592,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     gap: 10,
     marginBottom: 16,
-  },
-
-  searchBox: {
-    flex: 1,
-    borderWidth: 1,
-    borderColor: '#CCC',
-    borderRadius: 8,
-    paddingHorizontal: 14,
-    paddingVertical: 12,
   },
 
   placeholderText: {

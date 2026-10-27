@@ -253,6 +253,7 @@ export default function OverallFundraisingScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: '#F7F8FA',
   },
   content: {
     padding: 20,
@@ -261,16 +262,19 @@ const styles = StyleSheet.create({
   },
   title: {
     marginBottom: 8,
+    color: '#172B4D',
   },
   subtitle: {
     marginBottom: 24,
     opacity: 0.7,
+    color: '#344054',
   },
   summaryGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     gap: 12,
     marginBottom: 32,
+    color: '#344054',
   },
   summaryCard: {
     width: '47%',
@@ -279,12 +283,16 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     padding: 16,
     gap: 8,
+    color: '#172B4D',
+    backgroundColor: '#FFFFFF',
   },
   cardLabel: {
     opacity: 0.7,
+    color: '#344054',
   },
   sectionTitle: {
     marginBottom: 16,
+    color: '#172B4D',
   },
   memberCard: {
     borderWidth: 1,
@@ -293,6 +301,7 @@ const styles = StyleSheet.create({
     padding: 16,
     marginBottom: 12,
     gap: 10,
+    backgroundColor: '#FFFFFF',
   },
   memberRow: {
     flexDirection: 'row',
